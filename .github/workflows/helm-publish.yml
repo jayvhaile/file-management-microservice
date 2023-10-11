@@ -1,8 +1,7 @@
 name: Publish Helm Chart
 permissions:
-  contents: read
+  contents: write
   packages: write
-  releases: write
 
 on:
   push:
