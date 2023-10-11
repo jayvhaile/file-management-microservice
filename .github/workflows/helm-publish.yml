@@ -7,6 +7,9 @@ on:
   push:
     branches:
       - master
+    paths:
+      - '.helm-chart/**'
+      - '.github/workflows/helm-publish.yml'
 
 jobs:
   publish-chart:
