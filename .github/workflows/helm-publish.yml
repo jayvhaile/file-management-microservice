@@ -1,4 +1,4 @@
-name: Publish Helm Chart
+name: Release Helm Chart
 permissions:
   contents: write
   packages: write
