@@ -25,11 +25,7 @@ jobs:
 
       - name: Create GitHub Release and Upload Helm Chart
         id: create_release
-        uses: gh-actions/gh-release@v1
-        env:
-          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        uses: softprops/action-gh-release@v1
         with:
-          tag_name: ${{ github.sha }}
-          release_name: Release ${{ github.sha }}
-          assets: ${{ env.CHART_FILE }}
+          files: ${{ env.CHART_FILE }}
 
