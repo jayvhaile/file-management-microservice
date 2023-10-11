@@ -13,7 +13,7 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout latest code
+      - name: Checkout latestcode
         uses: actions/checkout@v2
 
       - name: Set up Helm
@@ -32,7 +32,7 @@ jobs:
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          tag_name: ${{ github.sha }}
+          tag_name: latest-release
           release_name: Release ${{ github.sha }}
           files: ${{ env.CHART_FILE }}
 
