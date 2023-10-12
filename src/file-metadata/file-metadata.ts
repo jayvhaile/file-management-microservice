@@ -6,4 +6,5 @@ export interface FileMetadata {
     mimeType: string;
     createdAt: Date;
     hash: string;
+    extension: string;
 }

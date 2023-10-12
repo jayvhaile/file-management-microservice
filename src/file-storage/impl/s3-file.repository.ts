@@ -1,45 +1,67 @@
-import * as AWS from 'aws-sdk';
-import {FileStorageRepository} from "../file-storage.repository";
-import {FileData} from "../../models/file-data";
+import { FileStorageRepository } from "../file-storage.repository";
+import { Injectable } from "@nestjs/common";
+import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client } from "@aws-sdk/client-s3";
+import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
 
-class S3FileRepository extends FileStorageRepository {
-    private s3: AWS.S3;
 
-    constructor() {
-        super();
-        this.s3 = new AWS.S3({
-            credentials: {
-                accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-                secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-            },
-            region: process.env.AWS_REGION,
-        });
+const BUCKET_NAME = process.env.AWS_S3_BUCKET_NAME;
+@Injectable()
+export class S3FileRepository extends FileStorageRepository {
+  private s3Client: S3Client;
+
+  constructor() {
+    super();
+    this.s3Client = new S3Client({
+      credentials: {
+        accessKeyId: process.env.AWS_ACCESS_KEY_ID,
+        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY
+      },
+      region: process.env.AWS_REGION
+    });
+  }
+
+  async upload(data: Buffer, path: string): Promise<void> {
+    const command = new PutObjectCommand({
+      Bucket: BUCKET_NAME,
+      Key: path,
+      Body: data
+    });
+    await this.s3Client.send(command);
+
+  }
+
+  async download(filePath: string): Promise<Buffer> {
+    const command = new GetObjectCommand({
+      Bucket: BUCKET_NAME,
+      Key: filePath
+    });
+    const response = await this.s3Client.send(command);
+
+    if (!response.Body) {
+      throw new Error("No file body");
     }
 
-    async upload(data: Buffer, path: string): Promise<void> {
-        await this.s3.upload({
-            Bucket: process.env.AWS_BUCKET_NAME,
-            Key: path,
-            Body: data,
-        }).promise();
+    const byteArray = await response.Body.transformToByteArray();
 
-    }
+    return Buffer.from(byteArray);
+  }
 
-    async download(filePath: string): Promise<Buffer> {
-        const result = await this.s3.getObject({
-            Bucket: process.env.AWS_BUCKET_NAME,
-            Key: filePath,
-        }).promise();
+  async getDownloadUrl(key: string): Promise<string> {
+    const command = new GetObjectCommand({
+      Bucket: BUCKET_NAME,
+      Key: key
+    });
 
-        if (result.Body === undefined) throw new Error('File not found');
 
-        return result.Body as Buffer;
-    }
+      // URL expires in 1 hour
+    return await getSignedUrl(this.s3Client, command, { expiresIn: 3600 });
+  }
 
-    async delete(fileId: string): Promise<void> {
-        await this.s3.deleteObject({
-            Bucket: process.env.AWS_BUCKET_NAME,
-            Key: fileId,
-        }).promise();
-    }
+  async delete(filePath: string): Promise<void> {
+    const command = new DeleteObjectCommand({
+      Bucket: BUCKET_NAME,
+      Key: filePath
+    });
+    await this.s3Client.send(command);
+  }
 }
