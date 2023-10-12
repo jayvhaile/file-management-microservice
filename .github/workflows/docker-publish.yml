@@ -7,6 +7,14 @@ permissions:
 on:
   push:
     branches: [ "master" ]
+    paths:
+      - 'src/**'
+      - 'test/**'
+      - 'package.json'
+      - 'nest-cli.json'
+      - 'pnpm-lock.yaml'
+      - 'tsconfig.json'
+      - 'tsconfig.build.json'
 
 env:
   REGISTRY: ghcr.io
