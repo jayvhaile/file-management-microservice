@@ -30,24 +30,10 @@ deployment.
 To install the microservice using Helm:
 
 ```bash
-helm upgrade --install file-management https://github.com/jayvhaile/file-management-microservice/releases/download/latest-release/file-management-1.0.0.tgz -f values.yaml
-
-where values.yaml should contain:
-
-aws:
-  credentials:
-    accessKeyId: ""
-    secretAccessKey: ""
-  region: ""
-  s3BucketName: ""
-database:
-  mongoUrl: ""
-
-Required Environment Variables:
-
-- `PORT`: The port the server will listen on.
-- `MONGO_URL`: The URL of the MongoDB database.
-- `AWS_ACCESS_KEY_ID`: The AWS access key ID.
-- `AWS_REGION`: The AWS region.
-- `AWS_SECRET_ACCESS_KEY`: The AWS secret access key.
-- `AWS_BUCKET_NAME`: The AWS bucket name.
+helm upgrade --install file-management \ 
+https://github.com/jayvhaile/file-management-microservice/releases/download/latest-release/file-management-1.0.0.tgz \
+--set aws.credentials.accessKeyId=your-access-key-id \
+--set aws.credentials.secretAccessKey=your-secret-access-key \
+--set aws.region=your-aws-region \
+--set aws.s3BucketName=your-s3-bucket-name \
+--set database.mongoUrl=your-mongo-url
