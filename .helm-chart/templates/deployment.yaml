@@ -19,7 +19,7 @@ spec:
       {{- end }}
       labels:
         {{- include ".helm-chart.labels" . | nindent 8 }}
-	{{- with .Values.podLabels }}
+ {{- with .Values.podLabels }}
         {{- toYaml . | nindent 8 }}
         {{- end }}
     spec:
@@ -36,6 +36,19 @@ spec:
             {{- toYaml .Values.securityContext | nindent 12 }}
           image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
           imagePullPolicy: {{ .Values.image.pullPolicy }}
+          env:
+            - name: AWS_ACCESS_KEY_ID
+              value: {{ required "A valid .Values.aws.credentials.accessKeyId is required!" .Values.aws.credentials.accessKeyId | quote }}
+            - name: AWS_SECRET_ACCESS_KEY
+              value: {{ required "A valid .Values.aws.credentials.secretAccessKey is required!" .Values.aws.credentials.secretAccessKey | quote }}
+            - name: AWS_S3_BUCKET_NAME
+              value: {{ required "A valid .Values.aws.s3BucketName is required!" .Values.aws.s3BucketName | quote }}
+            - name: AWS_REGION
+              value: {{ required "A valid .Values.aws.region is required!" .Values.aws.region | quote }}
+            - name: MONGO_URL
+              value: {{ required "A valid .Values.database.mongoUrl is required!" .Values.database.mongoUrl | quote }}
+            - name: PORT
+              value: {{ required "A valid .Values.service.port is required!" .Values.service.port | quote }}
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
