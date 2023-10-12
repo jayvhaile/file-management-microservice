@@ -30,7 +30,7 @@ deployment.
 To install the microservice using Helm:
 
 ```bash
-helm upgrade --install file-management https://github.com/jayvhaile/file-management-microservice/releases/download/latest-release/file-management-0.1.0.tgz -f values.yaml
+helm upgrade --install file-management https://github.com/jayvhaile/file-management-microservice/releases/download/latest-release/file-management-1.0.0.tgz -f values.yaml
 
 where values.yaml should contain:
 

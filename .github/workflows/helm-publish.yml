@@ -25,7 +25,7 @@ jobs:
 
       - name: Package Helm chart
         run: |
-          helm package ./.helm-chart
+          helm package ./.helm-chart --version 1.0.0
           echo "CHART_FILE=$(ls *.tgz)" >> $GITHUB_ENV  # Pass the chart file name to the next step
 
       - name: Create GitHub Release and Upload Helm Chart
