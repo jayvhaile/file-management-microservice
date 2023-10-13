@@ -12,7 +12,11 @@ import { FileMetadataSchema } from "./file-metadata/file-metadata.schema";
   imports: [
     TypeOrmModule.forRoot({
       type: "mongodb",
-      url: process.env.MONGO_URL,
+      host: process.env.MONGO_HOST,
+      port: Number.parseInt(process.env.MONGO_PORT),
+      database: process.env.MONGO_DB_NAME,
+      username: process.env.MONGO_USERNAME,
+      password: process.env.MONGO_PASSWORD,
       autoLoadEntities: true
     }),
     TypeOrmModule.forFeature([
