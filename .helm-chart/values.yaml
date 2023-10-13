@@ -2,7 +2,7 @@ replicaCount: 1
 
 image:
   repository: ghcr.io/jayvhaile/file-management-microservice
-  pullPolicy: IfNotPresent
+  pullPolicy: Always
   tag: "latest"
 
 imagePullSecrets: [ ]

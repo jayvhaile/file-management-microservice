@@ -4,6 +4,7 @@ import { Entity, Column, ObjectId, ObjectIdColumn } from "typeorm";
 export class FileMetadataSchema {
   @ObjectIdColumn()
   _id: ObjectId;
+  @Column() referenceId: string;
   @Column() name: string;
   @Column() folder: string;
   @Column() size: number;

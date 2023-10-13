@@ -35,6 +35,12 @@ export class MongoFileMetadataRepository implements FileMetadataRepository {
     return mapSchemaToModel(fileMetadataSchema);
   }
 
+  async findByReferenceId(referenceId: string): Promise<FileMetadata | null> {
+    let fileMetadataSchema = await this.repo.findOne({ where: { referenceId } });
+    if (!fileMetadataSchema) return null;
+    return mapSchemaToModel(fileMetadataSchema);
+  }
+
 
 }
 
@@ -42,6 +48,7 @@ function mapSchemaToModel(fileMetadataSchema: FileMetadataSchema): FileMetadata 
   return ({
     id: fileMetadataSchema._id.toString(),
     hash: fileMetadataSchema.hash,
+    referenceId: fileMetadataSchema.referenceId,
     name: fileMetadataSchema.name,
     folder: fileMetadataSchema.folder,
     size: fileMetadataSchema.size,
@@ -55,6 +62,7 @@ function mapModelToSchema(fileMetadata: FileMetadata): FileMetadataSchema {
   return ({
     _id: ObjectId.createFromHexString(fileMetadata.id),
     hash: fileMetadata.hash,
+    referenceId: fileMetadata.referenceId,
     name: fileMetadata.name,
     folder: fileMetadata.folder,
     size: fileMetadata.size,

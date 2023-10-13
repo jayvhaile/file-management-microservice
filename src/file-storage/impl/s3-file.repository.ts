@@ -64,4 +64,17 @@ export class S3FileRepository extends FileStorageRepository {
     });
     await this.s3Client.send(command);
   }
+
+  async exists(filePath: string): Promise<boolean> {
+    try {
+      const command = new GetObjectCommand({
+        Bucket: BUCKET_NAME,
+        Key: filePath
+      });
+      await this.s3Client.send(command);
+      return true;
+    } catch (e) {
+      return false;
+    }
+  }
 }
